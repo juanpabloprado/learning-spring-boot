@@ -47,7 +47,8 @@ public class ImageService {
     Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
   }
 
-  @Bean @Profile("dev")
+  @Bean
+  //@Profile("dev")
   CommandLineRunner setUp(ImageRepository repository) throws IOException {
     return (args) -> {
       FileSystemUtils.deleteRecursively(new File(UPLOAD_ROOT));
