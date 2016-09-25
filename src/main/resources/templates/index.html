@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Learning Spring Boot</title>
+  <link rel="stylesheet" href="/main.css" />
 </head>
 <body>
 <div>
@@ -20,7 +21,7 @@
     <tr th:each="image : ${page.content}">
       <td th:text="${image.id}" />
       <td th:text="${image.name}" />
-      <td><img th:src="@{'/images/' + ${image.name} + '/raw' }" th:alt="${image.name}" /></td>
+      <td><img th:src="@{'/images/' + ${image.name} + '/raw' }" th:alt="${image.name}" class="thumbnail"/></td>
     </tr>
     </tbody>
   </table>
