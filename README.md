@@ -4,7 +4,7 @@ Learning Spring Boot
 In order to compile and run, type the following commands on your terminal:
 
 ```bash
-./gradlew bootRun
+./gradlew clean bootRun
 ```
 
 In order to debug:
