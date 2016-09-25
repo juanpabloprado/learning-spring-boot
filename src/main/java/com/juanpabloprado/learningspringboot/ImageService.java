@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
@@ -35,15 +36,18 @@ public class ImageService {
   private final CounterService counterService;
   private final GaugeService gaugeService;
   private final InMemoryMetricRepository inMemoryMetricRepository;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @Autowired
   public ImageService(ImageRepository repository, ResourceLoader resourceLoader,
-      CounterService counterService, GaugeService gaugeService, InMemoryMetricRepository inMemoryMetricRepository) {
+      CounterService counterService, GaugeService gaugeService,
+      InMemoryMetricRepository inMemoryMetricRepository, SimpMessagingTemplate messagingTemplate) {
     this.repository = repository;
     this.resourceLoader = resourceLoader;
     this.counterService = counterService;
     this.gaugeService = gaugeService;
     this.inMemoryMetricRepository = inMemoryMetricRepository;
+    this.messagingTemplate = messagingTemplate;
 
     this.counterService.reset(FILES_UPLOADED);
     this.gaugeService.submit(FILES_UPLOADED_LAST_BYTES, 0);
@@ -64,7 +68,9 @@ public class ImageService {
       repository.save(new Image(file.getOriginalFilename()));
       counterService.increment(FILES_UPLOADED);
       gaugeService.submit(FILES_UPLOADED_LAST_BYTES, file.getSize());
-      inMemoryMetricRepository.increment(new Delta<Number>(FILES_UPLOADED_TOTAL_BYTES, file.getSize()));
+      inMemoryMetricRepository.increment(
+          new Delta<Number>(FILES_UPLOADED_TOTAL_BYTES, file.getSize()));
+      messagingTemplate.convertAndSend("/topic/newImage", file.getOriginalFilename());
     }
   }
 
@@ -72,6 +78,7 @@ public class ImageService {
     final Image byName = repository.findByName(filename);
     repository.delete(byName);
     Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+    messagingTemplate.convertAndSend("/topic/deleteImage", filename);
   }
 
   @Bean
