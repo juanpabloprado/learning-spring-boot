@@ -17,3 +17,8 @@ In order to post an image using curl:
 ```bash
 curl -v -X POST -F file=@/Users/juanprado/Downloads/image.jpg localhost:8080/images
 ```
+
+In order to do ssh into the app
+```bash
+ssh -p 2000 user@localhost
+```
