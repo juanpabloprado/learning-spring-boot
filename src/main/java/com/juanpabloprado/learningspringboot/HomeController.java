@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HomeController {
@@ -58,19 +58,15 @@ public class HomeController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = BASE_PATH)
-  @ResponseBody
-  public ResponseEntity<?> createFile(@RequestParam("file") MultipartFile file,
-      HttpServletRequest servletRequest) throws URISyntaxException {
+  public String createFile(@RequestParam("file") MultipartFile file,
+      RedirectAttributes redirectAttributes) throws URISyntaxException {
     try {
       imageService.createImage(file);
-      final URI locationUri = new URI(servletRequest.getRequestURL().toString() + "/")
-          .resolve(file.getOriginalFilename() + "/raw");
-      return ResponseEntity.created(locationUri)
-          .body("Successfully uploaded " + file.getOriginalFilename());
+      redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded " + file.getOriginalFilename());
     } catch (IOException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+      redirectAttributes.addFlashAttribute("flash.message", "Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
     }
+    return "redirect:/";
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
