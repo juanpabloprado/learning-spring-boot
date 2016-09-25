@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Learning Spring Boot</title>
+</head>
+<body>
+<div>
+  <h3 th:text="${page.number + 1} + ' of ' + ${page.totalPages}" />
+  <table>
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Image</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="image : ${page.content}">
+      <td th:text="${image.id}" />
+      <td th:text="${image.name}" />
+      <td><img th:src="@{'/images/' + ${image.name} + '/raw' }" th:alt="${image.name}" /></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
