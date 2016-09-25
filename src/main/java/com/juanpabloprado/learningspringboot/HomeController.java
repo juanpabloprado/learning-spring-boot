@@ -1,15 +1,12 @@
 package com.juanpabloprado.learningspringboot;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,10 +36,10 @@ public class HomeController {
   public String index(Model model, Pageable pageable) {
     final Page<Image> page = imageService.findPage(pageable);
     model.addAttribute("page", page);
-    if(page.hasPrevious()) {
+    if (page.hasPrevious()) {
       model.addAttribute("prev", pageable.previousOrFirst());
     }
-    if(page.hasNext()) {
+    if (page.hasNext()) {
       model.addAttribute("next", pageable.next());
     }
     return "index";
@@ -68,9 +65,11 @@ public class HomeController {
       RedirectAttributes redirectAttributes) throws URISyntaxException {
     try {
       imageService.createImage(file);
-      redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded " + file.getOriginalFilename());
+      redirectAttributes.addFlashAttribute("flash.message",
+          "Successfully uploaded " + file.getOriginalFilename());
     } catch (IOException e) {
-      redirectAttributes.addFlashAttribute("flash.message", "Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+      redirectAttributes.addFlashAttribute("flash.message",
+          "Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
     }
     return "redirect:/";
   }
@@ -80,8 +79,9 @@ public class HomeController {
     try {
       imageService.deleteImage(filename);
       redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted " + filename);
-    } catch (IOException|RuntimeException e) {
-      redirectAttributes.addFlashAttribute("flash.message", "Failed to delete " + filename + " => " + e.getMessage());
+    } catch (IOException | RuntimeException e) {
+      redirectAttributes.addFlashAttribute("flash.message",
+          "Failed to delete " + filename + " => " + e.getMessage());
     }
     return "redirect:/";
   }
