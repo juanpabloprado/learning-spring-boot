@@ -18,6 +18,10 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
+springBoot {
+  executable = true
+}
+
 jar {
   baseName = 'learning-spring-boot'
   version = '0.0.1-SNAPSHOT'
