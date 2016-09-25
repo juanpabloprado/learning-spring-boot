@@ -8,6 +8,7 @@
 <body>
 
 <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
+<h4 th:text="${page.size} + ' item(s) per page'"></h4>
 
 <div>
   <h3 th:text="${page.number + 1} + ' of ' + ${page.totalPages}" />
@@ -24,7 +25,7 @@
     <tr th:each="image : ${page.content}">
       <td th:text="${image.id}" />
       <td th:text="${image.name}" />
-      <td><img th:src="@{'/images/' + ${image.name} + '/raw' }" th:alt="${image.name}" class="thumbnail"/></td>
+      <td><a th:href="@{'/images/' + ${image.name} + '/raw' }"><img th:src="@{'/images/' + ${image.name} + '/raw' }" th:alt="${image.name}" class="thumbnail"/></a></td>
       <td>
         <form th:method="delete" th:action="@{'/images/' + ${image.name}}">
           <input type="submit" value="Delete" />
@@ -33,6 +34,11 @@
     </tr>
     </tbody>
   </table>
+
+  <ul>
+    <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
+    <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
+  </ul>
 
   <form method="post" enctype="multipart/form-data" action="/images">
     <p><input type="file" name="file" /></p>
