@@ -1,6 +1,8 @@
 package com.juanpabloprado.learningspringboot;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -13,5 +15,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .formLogin()
         .permitAll();
+  }
+
+  @Autowired
+  public void configureInMemoryUsers(AuthenticationManagerBuilder auth) throws Exception {
+    auth.inMemoryAuthentication()
+        .withUser("juan").password("prado").roles("ADMIN", "USER")
+        .and()
+        .withUser("rob").password("winch").roles("USER")
+        .and()
+        .withUser("user1").password("password").roles("USER").disabled(true)
+        .and()
+        .withUser("user2").password("password").roles("USER").accountLocked(true);
   }
 }
