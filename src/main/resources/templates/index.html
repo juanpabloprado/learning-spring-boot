@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/>
   <title>Learning Spring Boot</title>
@@ -8,6 +8,14 @@
 </head>
 <body>
 
+<div>
+  <span sec:authentication="name"></span> has <span sec:authentication="authorities"></span>
+  <form method="post" th:action="@{/logout}">
+    <input type="submit" value="Sign Off" />
+  </form>
+</div>
+
+<h1>Learning Spring Boot</h1>
 <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 <h4 th:text="${page.size} + ' item(s) per page'"></h4>
 
