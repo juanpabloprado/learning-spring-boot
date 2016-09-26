@@ -83,19 +83,22 @@ public class ImageService {
 
   @Bean
     //@Profile("dev")
-  CommandLineRunner setUp(ImageRepository repository) throws IOException {
+  CommandLineRunner setUp(ImageRepository imageRepository, UserRepository userRepository) throws IOException {
     return (args) -> {
       FileSystemUtils.deleteRecursively(new File(UPLOAD_ROOT));
       Files.createDirectory(Paths.get(UPLOAD_ROOT));
 
+      User juan = userRepository.save(new User("juan", "prado", "ROLE_ADMIN", "ROLE_USER"));
+      User rob = userRepository.save(new User("rob", "winch", "ROLE_USER"));
+
       FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/test"));
-      repository.save(new Image("test"));
+      imageRepository.save(new Image("test"));
 
       FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/test2"));
-      repository.save(new Image("test2"));
+      imageRepository.save(new Image("test2"));
 
       FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/test3"));
-      repository.save(new Image("test3"));
+      imageRepository.save(new Image("test3"));
     };
   }
 }
